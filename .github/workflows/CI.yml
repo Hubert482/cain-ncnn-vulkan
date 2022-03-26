@@ -34,7 +34,7 @@ jobs:
         cmake --build . -j 2
     - name: package
       run: |
-        mkdir -p cainLi
+        mkdir cainLi
         cp README.md LICENSE cainLi
         cp build/cain-ncnn-vulkan cainLi/
         zip -9 -r cain.zip -i CainLi/
