@@ -71,7 +71,7 @@ jobs:
     - name: upload
       uses: actions/upload-artifact@v2
       with:
-        name: Cain
+        name: CainOsX
         path: build-x86_64/cain-ncnn-vulkan
     
         
