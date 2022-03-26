@@ -2,31 +2,13 @@ name: CI
 on: [push, pull_request]
 
 
-env:
-  DEVELOPER_DIR: /Applications/Xcode_12.5.app/Contents/Developer
-  APPLICATION_NAME: cain-ncnn-vulkan
-
 jobs:
 
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      APPNAME: ${{ steps.get_appname.outputs.APPNAME }}
-      VERSION: ${{ steps.get_version.outputs.VERSION }}
-    steps:
-    - name: get-appname
-      id: get_appname
-      run: echo ::set-output name=APPNAME::${APPLICATION_NAME}
-    - name: get-version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      
 
   ubuntu:
-    needs: [setup]
     runs-on: ubuntu-18.04
     env:
-      PACKAGENAME: ${{ needs.setup.outputs.APPNAME }}-${{ needs.setup.outputs.VERSION }}-ubuntu
+      PACKAGENAME: cain-ubuntu
     steps:
     - uses: actions/checkout@v2
       with:
@@ -52,14 +34,12 @@ jobs:
         cmake --build . -j 2
     - name: package
       run: |
-        mkdir -p ${{ env.PACKAGENAME }}
-        cp README.md LICENSE ${{ env.PACKAGENAME }}
-        cp build/${{ needs.setup.outputs.APPNAME }} ${{ env.PACKAGENAME }}
-        strip -g ${{ env.PACKAGENAME }}/${{ needs.setup.outputs.APPNAME }}
-        cp -r models/* ${{ env.PACKAGENAME }}
-        zip -9 -r ${{ env.PACKAGENAME }}.zip ${{ env.PACKAGENAME }}
+        mkdir -p cainLi
+        cp README.md LICENSE cainLi
+        cp build/cain-ncnn-vulkan cainLi/
+        zip -9 -r cain.zip CainLi/
     - name: upload
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.PACKAGENAME }}
-        path: ${{ env.PACKAGENAME }}.zip
+        name: CainLi
+        path: CainLi.zip
