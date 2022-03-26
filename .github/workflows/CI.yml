@@ -37,7 +37,7 @@ jobs:
         mkdir cainLi
         cp README.md LICENSE cainLi
         cp build/cain-ncnn-vulkan cainLi/
-        zip -r cain.zip CainLi
+        zip -r cain.zip -i CainLi
     - name: upload
       uses: actions/upload-artifact@v2
       with:
