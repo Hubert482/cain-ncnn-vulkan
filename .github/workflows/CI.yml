@@ -4,8 +4,35 @@ on: [push, pull_request]
 env:
   DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
 jobs:
-
-
+  windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: cache-vulkansdk
+      id: cache-vulkansdk
+      uses: actions/cache@v1
+      with:
+        path: "VulkanSDK"
+        key: VulkanSDK-1.2.162.0-Installer
+    - name: vulkansdk
+      if: steps.cache-vulkansdk.outputs.cache-hit != 'true'
+      run: |
+        Invoke-WebRequest -Uri https://sdk.lunarg.com/sdk/download/1.2.162.0/windows/VulkanSDK-1.2.162.0-Installer.exe?Human=true -OutFile VulkanSDK-1.2.162.0-Installer.exe
+        7z x -aoa ./VulkanSDK-1.2.162.0-Installer.exe -oVulkanSDK
+        Remove-Item .\VulkanSDK\Demos, .\VulkanSDK\Samples, .\VulkanSDK\Third-Party, .\VulkanSDK\Tools, .\VulkanSDK\Tools32, .\VulkanSDK\Bin32, .\VulkanSDK\Lib32 -Recurse
+    - name: build
+      run: |
+        $env:VULKAN_SDK="$(pwd)/VulkanSDK"
+        mkdir build; cd build
+        cmake -A x64 ../src
+        cmake --build . --config Release -j 2 
+    - name: upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: CainWind
+        path: build-x86_64/cain-ncnn-vulkan
   ubuntu:
     runs-on: ubuntu-18.04
     env:
@@ -36,7 +63,7 @@ jobs:
     - name: upload
       uses: actions/upload-artifact@v2
       with:
-        name: Cain
+        name: CainLin
         path: build/cain-ncnn-vulkan
   macos:
     runs-on: macos-latest
