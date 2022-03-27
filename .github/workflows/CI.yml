@@ -85,6 +85,8 @@ jobs:
         cd vulkansdk-macos-1.3.204.1
         ls
         ls
+        
+        sudo ./InstallVulkan.app/Contents/MacOS/InstallVulkan --root "./" --accept-licenses --default-answer --confirm-command install
         cd ..
         find vulkansdk-macos-1.3.204.1 -type f | grep -v -E 'vulkan|glslang|MoltenVK' | xargs rm
         hdiutil detach /Volumes/vulkansdk-macos-1.3.204.1 
