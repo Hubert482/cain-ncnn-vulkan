@@ -32,7 +32,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: CainWind
-        path: build/cain-ncnn-vulkan.exe
+        path: build/Release/cain-ncnn-vulkan.exe
   ubuntu:
     runs-on: ubuntu-18.04
     env:
